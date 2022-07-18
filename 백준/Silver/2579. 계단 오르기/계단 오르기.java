@@ -12,8 +12,7 @@ public class Main {
       stairs[i] = Integer.parseInt((in.readLine()));
     }
 
-    // conOnes to record continuous one steps, and maxPoints to record maximum point on that step
-    // int[][] whatStep = new int[n+1][2];
+    // maxPoints to record maximum point on that step
     int[][] maxPoints = new int[n+1][2];
 
     // Fill the table (-1 point for forbiden cases)
@@ -22,6 +21,7 @@ public class Main {
       maxPoints[i][0] = maxPoints[i-1][1] + stairs[i];
       
       // two stairs up
+      // if first stair, consider as two step from value 0
       maxPoints[i][1] = 
         (i >= 2) ? Math.max(maxPoints[i-2][0], maxPoints[i-2][1]) + stairs[i]
           : stairs[i];
