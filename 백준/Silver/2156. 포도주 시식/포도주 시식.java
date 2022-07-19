@@ -23,9 +23,9 @@ public class Main {
       else {
         maxWineSet[i] = Arrays.stream(
           new int[]{
-            maxWineSet[i-1], 
-            maxWineSet[i-2] + wines[i], 
-            maxWineSet[i-3] + wines[i-1] + wines[i]
+            maxWineSet[i-1], // 현재꺼 포함 없이
+            maxWineSet[i-2] + wines[i], // 이번꺼 포함, 전꺼 제외, 전전꺼 포함
+            maxWineSet[i-3] + wines[i-1] + wines[i] // 이번꺼 포함, 전꺼 포함, 전전꺼 제외
           }
         ).max().getAsInt();
       }
