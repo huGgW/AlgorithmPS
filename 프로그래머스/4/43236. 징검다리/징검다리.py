@@ -9,10 +9,11 @@ def solution(distance: int, rocks: List[int], n: int) -> int:
     rocks.insert(0, 0)
     rocks.append(distance)
 
-    return binarySearch(rocks, 0, ceil(distance / (len(rocks)-1-n)), n, 0)
+    return binarySearch(rocks, 0, ceil(distance / len(rocks)), n, 0)
 
 
 def binarySearch(rocks: List[int], b: int, e: int, n: int, mx: int) -> int:
+    print(f"b: {b}, e: {e}, max: {mx}")
     if b > e:
         return mx
 
@@ -33,7 +34,7 @@ def simulate(rocks: List[int], threshold: int, n: int) -> int:
             i = j
         else:
             n -= 1
-    if rocks[-1] - rocks[i] < threshold:
+    if rocks[len(rocks)-1] - rocks[i] < threshold:
         n -= 1
 
     return n
