@@ -5,20 +5,22 @@ input = sys.stdin.readline
 output = sys.stdout.write
 flush = sys.stdout.flush
 
-def idxGen(N, M, prev: List[int] = []):
+def idxGen(N, M, hist: List[bool], prev: List[int] = []):
     s = len(prev) + 1
     for i in range(N):
-        if i in prev:
+        if hist[i]:
             continue
 
         prev.append(i)
+        hist[i] = True
 
         if s == M:
             yield prev
         else:
-            yield from idxGen(N, M, prev)
+            yield from idxGen(N, M, hist, prev)
 
         prev.pop(-1)
+        hist[i] = False
 
 def numsStrFromIdxs(idxs: List[int], nums: List[int]) -> str:
     s = str(nums[idxs[0]])
@@ -35,7 +37,7 @@ if __name__ == "__main__":
 
     nums.sort()
 
-    for idxs in idxGen(N, M):
+    for idxs in idxGen(N, M, [False for _ in range(N)]):
         output(numsStrFromIdxs(idxs, nums) + "\n")
 
     flush()
