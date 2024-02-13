@@ -102,4 +102,3 @@ class Bitmask:
 
     def contains(self, i: int, j: int) -> bool:
         return bool(self.mask & 1 << (self._2dTo1d(i, j)))
-
