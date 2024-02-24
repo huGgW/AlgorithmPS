@@ -4,9 +4,21 @@ sys.setrecursionlimit(10**6)
 
 class Solution:
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-        for x in nums2:
-            idx = self.binarySearch(x, 0, len(nums1)-1, nums1)
+        popFirst = True
+        beginIdx = 0
+        endIdx = len(nums1) - 1
+        while nums2:
+            x = nums2.pop(0) if popFirst else nums2.pop(-1)
+            idx = self.binarySearch(x, beginIdx, endIdx, nums1)
             nums1.insert(idx, x)
+
+            if popFirst:
+                beginIdx = idx + 1
+                endIdx += 1
+            else:
+                endIdx = idx - 1
+
+            popFirst = not popFirst
 
         if len(nums1) % 2 == 0:
             return (nums1[int(len(nums1) / 2)] + nums1[int(len(nums1) / 2) - 1]) / 2
@@ -26,3 +38,4 @@ class Solution:
             return self.binarySearch(target, begin, mid-1, nums)
         else:
             return mid
+        
