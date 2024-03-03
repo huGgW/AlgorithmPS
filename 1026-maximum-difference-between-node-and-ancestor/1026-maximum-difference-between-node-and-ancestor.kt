@@ -27,13 +27,15 @@ class Solution {
             minMaxNodeTraverse(it)
         } ?: Pair(null, null)
 
-        val nodeMin = listOf(
-            leftMin ?: MAXBOUNDARY, rightMin ?: MAXBOUNDARY, node.`val`
-        ).min()
+        val nodeMin = min(
+            min(leftMin ?: MAXBOUNDARY, rightMin ?: MAXBOUNDARY),
+            node.`val`
+        )
 
-        val nodeMax = listOf(
-            leftMax ?: MINBOUNDARY, rightMax ?: MINBOUNDARY, node.`val`
-        ).max()
+        val nodeMax = max(
+            max(leftMax ?: MINBOUNDARY, rightMax ?: MINBOUNDARY),
+            node.`val`
+        )
 
         maxAbsDiff = max(
             maxAbsDiff,
