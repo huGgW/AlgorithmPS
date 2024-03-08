@@ -7,7 +7,7 @@
 class Solution:
     def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
         if root is None:
-            return
+            return []
 
         queue: list[tuple[TreeNode, int]] = [(root, 0)]
         result: list[int] = []
@@ -24,6 +24,6 @@ class Solution:
                 queue.append((node.right, depth + 1))
 
             if node.left is not None:
-            queue.append((node.left, depth + 1))
+                queue.append((node.left, depth + 1))
 
         return result
