@@ -14,18 +14,36 @@ class Solution:
         self.trackChildrensAndCheckAns(root)
         return self.ans
 
-    def trackChildrensAndCheckAns(self, node: TreeNode) -> set[int]:
-        leftChildren, rightChildren = set(), set()
-
+    def trackChildrensAndCheckAns(self, node: TreeNode) -> tuple[bool, bool]:
+        leftChecked = (False, False)
+        rightChecked = (False, False)
         if node.left:
-            leftChildren.update(self.trackChildrensAndCheckAns(node.left))
+            leftChecked = self.trackChildrensAndCheckAns(node.left)
         if node.right:
-            rightChildren.update(self.trackChildrensAndCheckAns(node.right))
+            rightChecked = self.trackChildrensAndCheckAns(node.right)
 
-        children = leftChildren.union(rightChildren)
-        children.add(node.val)
+        stat = self.mergeCheckStats(leftChecked, rightChecked)
+        stat = self.updateCheckStats(stat, node.val)
 
-        if self.ans is None and self.p.val in children and self.q.val in children:
-            self.ans = node
+        if (not self.isMoreCheckNeeded(stat)) and self.ans is None:
+                self.ans = node
 
-        return children
+        return stat
+
+    def mergeCheckStats(self, left: tuple[bool, bool], right: tuple[bool, bool]) -> tuple[bool, bool]:
+        result =  (
+            left[0] or right[0],
+            left[1] or right[1]
+        )
+        return result
+
+    def updateCheckStats(self, stat: tuple[bool, bool], val: int) -> tuple[bool, bool]:
+        result = (
+            stat[0] or val == self.p.val,
+            stat[1] or val == self.q.val
+        )
+        return result
+
+    def isMoreCheckNeeded(self, stat: tuple[bool, bool]) -> bool:
+        return not(stat[0] and stat[1])
+
