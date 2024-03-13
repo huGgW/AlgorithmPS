@@ -1,9 +1,5 @@
 class Solution:
     def longestPalindrome(self, s: str) -> str:
-        # edge case
-        # if len(s) < 2:
-        #     return s
-
         # start idx of palins
         oddPalins = [i for i in range(len(s))]
         evenPalins = [i for i in range(len(s) - 1) if s[i] == s[i + 1]]
