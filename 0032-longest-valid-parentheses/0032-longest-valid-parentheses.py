@@ -32,11 +32,14 @@ class Solution:
             # wrap available parens
             def wrapIsPossibleAndChangeState(tup: Tuple[int, int]) -> Tuple[int, int]:
                 nonlocal changed
-                if self.isWrappable(tup[0], tup[1]):
+                b, e = tup
+
+                while self.isWrappable(b, e):
                     changed = True
-                    return (tup[0]-1, tup[1]+1)
-                else: 
-                    return tup
+                    b -= 1; e += 1
+
+                return (b, e)
+                
 
             validParens = [wrapIsPossibleAndChangeState(tup) for tup in validParens]
 
