@@ -9,6 +9,9 @@ class Solution:
             for i in range(spl):
                 mult *= val + 1 if i < rest else val
 
-            maxMults = max(maxMults, mult)
+            if maxMults >= mult:
+                break
+            else:
+                maxMults = mult
 
         return maxMults
