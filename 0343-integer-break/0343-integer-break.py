@@ -4,14 +4,14 @@ class Solution:
         for spl in range(2, n+1):
             val = n // spl
             rest = n % spl
-            maxValsOfSpl = [val for _ in range(spl)]
-            for i in range(rest):
-                maxValsOfSpl[i] += 1
-        
-            mult = reduce(
-                lambda x, y: x * y,
-                maxValsOfSpl
-            )
-            maxMults = max(maxMults, mult)
-        
+
+            mult = 1
+            for i in range(spl):
+                mult *= val + 1 if i < rest else val
+
+            if maxMults >= mult:
+                break
+            else:
+                maxMults = mult
+
         return maxMults
