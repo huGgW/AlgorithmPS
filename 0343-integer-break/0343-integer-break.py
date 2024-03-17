@@ -15,3 +15,4 @@ class Solution:
                 maxMults = mult
 
         return maxMults
+        
