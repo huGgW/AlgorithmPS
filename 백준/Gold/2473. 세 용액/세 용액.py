@@ -1,5 +1,4 @@
 import math
-import bisect
 
 from typing import *
 import sys
@@ -13,30 +12,24 @@ def main(vals: List[int], N: int) -> Tuple[int, int, int]:
     absSum = math.inf
     state: Tuple[int, int, int] = (-1, -1, -1)
 
-    for b in range(0, N-2):
-        for e in range(N-1, b+1, -1):
-            needs = -(vals[e] + vals[b])
-            rightBisectIdx = bisect.bisect_right(
-                vals,
-                needs,
-                b+1,
-                e-1,
-            )
+    for i in range(N-2):
+        j, k = i+1, N-1
+        while k - j > 0:
+            sumOf = vals[i] + vals[j] + vals[k]
+            if abs(sumOf) < absSum:
+                absSum = abs(sumOf)
+                state = (vals[i], vals[j], vals[k])
 
-            smallSum = vals[rightBisectIdx-1] - needs \
-                if rightBisectIdx-1 > b else math.inf
-            bigSum = vals[rightBisectIdx] - needs \
-                if rightBisectIdx < e else math.inf
-            optTmpSum = smallSum if abs(smallSum) < abs(bigSum) else bigSum
-            optTmpIdx = rightBisectIdx-1 if abs(smallSum) < abs(bigSum) else rightBisectIdx
-
-            if abs(optTmpSum) < absSum:
-                absSum = abs(optTmpSum)
-                state = (vals[b], vals[optTmpIdx], vals[e])
-                if optTmpSum == 0:
+                if sumOf == 0:
                     return state
 
+            if sumOf < 0:
+                j += 1
+            else:
+                k -= 1
+
     return state
+
 
 
 if __name__ == "__main__":
