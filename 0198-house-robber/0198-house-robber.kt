@@ -1,17 +1,10 @@
 class Solution {
-    fun rob(nums: IntArray): Int =
-        when (nums.size) {
-            1 -> nums[0]
-            2 -> maxOf(nums[0], nums[1])
-            else -> {
-                var twoBefore = nums[0]
-                var oneBefore = maxOf(nums[1], nums[0])
-                for (i in 2 until nums.size) {
-                    val next = maxOf(oneBefore, twoBefore + nums[i])
-                    twoBefore = oneBefore
-                    oneBefore = next
-                }
-                oneBefore
-            }
-        }
+    tailrec fun rob(
+        nums: IntArray, curr: Int = 0, twoBefore: Int = 0, oneBefore: Int = 0
+    ): Int = when (curr) {
+        in 0 until nums.size ->
+            rob(nums, curr + 1, oneBefore, maxOf(twoBefore + nums[curr], oneBefore))
+
+        else -> oneBefore
+    }
 }
