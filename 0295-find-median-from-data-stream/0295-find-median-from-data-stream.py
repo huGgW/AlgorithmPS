@@ -52,7 +52,7 @@ class Heap:
         return self.heap[0]
 
 
-class ReversedHeap(Heap):
+class ReversedHeap:
     def __init__(self):
         self.heap: List[int] = []
 
@@ -63,7 +63,7 @@ class ReversedHeap(Heap):
         heapq.heappush(self.heap, -x)
 
     def pop(self) -> int:
-        result = -1 *heapq.heappop(self.heap)
+        result = -1 * heapq.heappop(self.heap)
         return result
 
     def peek(self) -> int:
