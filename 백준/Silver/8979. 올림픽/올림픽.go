@@ -48,8 +48,8 @@ func (mh MedalHeap) Len() int {
 func (mh MedalHeap) Less(i, j int) bool {
 	return (-1 * CmpMedal(mh[i], mh[j])) < 0
 }
-func (mh *MedalHeap) Swap(i, j int) {
-	(*mh)[i], (*mh)[j] = (*mh)[j], (*mh)[i]
+func (mh MedalHeap) Swap(i, j int) {
+	(mh)[i], (mh)[j] = (mh)[j], (mh)[i]
 }
 func (mh *MedalHeap) Push(x any) {
 	*mh = append(*mh, x.(Medals))
@@ -78,20 +78,24 @@ func main() {
 	}
 	heap.Init(medalHeap)
 
-	var before *Medals = nil
+    before := Medals{}
 	rate := 0
+    sameRateCnt := 1
 	for medalHeap.Len() > 0 {
 		md := heap.Pop(medalHeap).(Medals)
 
-		if !(before != nil && CmpMedal(*before, md) == 0) {
-			rate++
-		}
+		if !(before.Number != 0 && CmpMedal(before, md) == 0) {
+			rate += sameRateCnt
+            sameRateCnt = 1
+		} else {
+            sameRateCnt += 1
+        }
 
 		if md.Number == K {
 			break
 		}
 
-		before = &md
+		before = md
 	}
 
 	wr.WriteString(strconv.Itoa(rate))
