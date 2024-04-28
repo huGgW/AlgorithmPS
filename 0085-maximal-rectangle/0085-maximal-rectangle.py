@@ -24,11 +24,16 @@ class Solution:
             for j in range(len(colContOnes)):
                 minHeight = colContOnes[j]
                 for jj in range(j, len(colContOnes)):
+                    # if height is 0 or already calculated possible max rect
                     if colContOnes[jj] == 0 or canIgnore[jj]:
                         break
+
+                    # calc min height and area for this rect
                     minHeight = min(colContOnes[jj], minHeight)
                     maxArea = max((jj - j + 1) * minHeight, maxArea)
 
+                    # if minheight is the col's height, 
+                    # this is already max rect from this col
                     if minHeight == colContOnes[jj]:
                         canIgnore[jj] = True
 
