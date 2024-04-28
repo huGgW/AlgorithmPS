@@ -20,13 +20,17 @@ class Solution:
                     colContOnes[j] -= 1
 
             # calc max rect begin from j
+            canIgnore = [False] * len(colContOnes)
             for j in range(len(colContOnes)):
                 minHeight = colContOnes[j]
                 for jj in range(j, len(colContOnes)):
-                    if colContOnes[jj] == 0:
+                    if colContOnes[jj] == 0 or canIgnore[jj]:
                         break
                     minHeight = min(colContOnes[jj], minHeight)
                     maxArea = max((jj - j + 1) * minHeight, maxArea)
+
+                    if minHeight == colContOnes[jj]:
+                        canIgnore[jj] = True
 
         return maxArea
 
