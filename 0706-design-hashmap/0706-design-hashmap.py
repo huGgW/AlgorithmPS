@@ -1,7 +1,7 @@
 class MyHashMap:
 
     def __init__(self):
-        self.container = [None] * 2**8
+        self.container = [None] * 2**6
 
     def put(self, key: int, value: int) -> None:
         idx = self.__hashFun(key)
@@ -55,7 +55,7 @@ class MyHashMap:
 
 
     def __hashFun(self, key: int) -> int:
-        return key % 2**8
+        return key % 2**6
         
 class Node:
     def __init__(self, v: Tuple[int, int]):
