@@ -9,38 +9,30 @@ func minWindow(s string, t string) string {
             tPattern[r] = 1
         }
     }
+    leftCnt := len(tPattern)
 
     beg, end := 0, -1
 
     subBeg, subEnd := -1, -1
     for end < len(s)-1 {
-        isIncluded := false
-
         // Growing Phase
-        for end < len(s)-1 && !isIncluded {
+        for end < len(s)-1 && leftCnt > 0 {
             end++
 
             r := rune(s[end])
-            if c, found := tPattern[r]; found {
-                tPattern[r] = c - 1
-            }
-
-            isIncluded = allIncluded(tPattern)
+            updateState(r, true, tPattern, &leftCnt)
         }
 
         // Shrink Phase && record
-        for isIncluded && beg <= end {
+        for leftCnt == 0 && beg <= end {
             if subBeg == -1 || subEnd - subBeg > end - beg {
                 subBeg, subEnd = beg, end
             }
 
             r := rune(s[beg])
-            if c, found := tPattern[r]; found {
-                tPattern[r] = c + 1
-            }
+            updateState(r, false, tPattern, &leftCnt)
 
             beg++
-            isIncluded = allIncluded(tPattern)
         }
     }
 
@@ -51,11 +43,18 @@ func minWindow(s string, t string) string {
     }
 }
 
-func allIncluded(pat map[rune]int) bool {
-    for _, c := range pat {
-        if c > 0 {
-            return false
+func updateState(r rune, isAdd bool, pat map[rune]int, cnt *int) {
+    if c, found := pat[r]; found {
+        if isAdd {
+            if c == 1 {
+                *cnt--
+            }
+            pat[r] = c - 1
+        } else {
+            if c == 0 {
+                *cnt++
+            }
+            pat[r] = c + 1
         }
     }
-    return true
 }
