@@ -26,10 +26,10 @@ func decodeRuneRecursive(runes []rune, cursor int) ([]rune, int) {
 		iterRunes, afterCursor := decodeRuneRecursive(runes, begCursor+1)
 		result := []rune{}
 		for i := 0; i < iterNum; i++ {
-			result = append(result, slices.Clone(iterRunes)...)
+			result = append(result, iterRunes...)
 		}
 		after, allHandledCursor := decodeRuneRecursive(runes, afterCursor)
-		return append(result, slices.Clone(after)...), allHandledCursor
+		return append(result, after...), allHandledCursor
 	} else {
 		cutIdx := cursor
 		for ; cutIdx < len(runes); cutIdx++ {
@@ -44,7 +44,7 @@ func decodeRuneRecursive(runes []rune, cursor int) ([]rune, int) {
 			return slices.Clone(runes[cursor:cutIdx]), cutIdx + 1
 		} else {
 			after, afterCursor := decodeRuneRecursive(runes, cutIdx)
-			return append(slices.Clone(runes[cursor:cutIdx]), slices.Clone(after)...), afterCursor
+			return append(slices.Clone(runes[cursor:cutIdx]), after...), afterCursor
 		}
 	}
 }
