@@ -1,12 +1,6 @@
 import (
-	"fmt"
 	"slices"
 )
-
-type Pair struct {
-    First int
-    Second int
-}
 
 type Triple struct {
     First int
@@ -22,20 +16,21 @@ func threeSum(nums []int) [][]int {
 
     zeroSet := map[Triple]struct{}{}
 
-    for b := 0; b <= len(nums)-3; b++ {
-        for e := b+1;  e <= len(nums)-2; e++ {
-            needVal := -1 * (nums[b] + nums[e])
-            idx, found := slices.BinarySearch(nums[e+1:], needVal)
-            idx += e+1
-
-            if found {
-                trp := Triple{nums[b], nums[e], nums[idx]}
-                if _, found := zeroSet[trp]; !found {
-                    zeroSet[trp] = struct{}{}
-                }
+    for i := 0; i < len(nums)-2; i++ {
+        b, e := i+1, len(nums)-1
+        for b < e {
+            sum := nums[i] + nums[b] + nums[e]
+            if sum > 0 {
+                e--
+            } else if sum < 0 {
+                b++
+            } else {
+                zeroSet[Triple{nums[i], nums[b], nums[e]}] = struct{}{}
+                b++
             }
         }
     }
+
 
     answer := [][]int{}
     for trp, _ := range zeroSet {
