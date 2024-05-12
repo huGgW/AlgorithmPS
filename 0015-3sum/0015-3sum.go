@@ -27,6 +27,7 @@ func threeSum(nums []int) [][]int {
             } else {
                 zeroSet[Triple{nums[i], nums[b], nums[e]}] = struct{}{}
                 b++
+                e--
             }
         }
     }
