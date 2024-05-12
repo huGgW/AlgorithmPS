@@ -2,19 +2,10 @@ import (
 	"slices"
 )
 
-type Triple struct {
-    First int
-    Second int
-    Third int
-}
-func (t Triple) ToSlice() []int {
-    return []int{t.First, t.Second, t.Third}
-}
-
 func threeSum(nums []int) [][]int {
     slices.Sort(nums)
 
-    zeroSet := map[Triple]struct{}{}
+    zeroSet := map[[3]int]struct{}{}
 
     for i := 0; i < len(nums)-2; i++ {
         b, e := i+1, len(nums)-1
@@ -25,7 +16,7 @@ func threeSum(nums []int) [][]int {
             } else if sum < 0 {
                 b++
             } else {
-                zeroSet[Triple{nums[i], nums[b], nums[e]}] = struct{}{}
+                zeroSet[[3]int{nums[i], nums[b], nums[e]}] = struct{}{}
                 b++
                 e--
             }
@@ -34,8 +25,8 @@ func threeSum(nums []int) [][]int {
 
 
     answer := [][]int{}
-    for trp, _ := range zeroSet {
-        answer = append(answer, trp.ToSlice())
+    for arr, _ := range zeroSet {
+        answer = append(answer, arr[:])
     }
 
     return answer
