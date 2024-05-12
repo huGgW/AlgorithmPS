@@ -1,8 +1,14 @@
 class Solution {
+    /**
+     * Permutation 순서
+     * 수열에 대하여 [ ..... i, j1, j2, ..., jm] 일 때
+     * j1부터 jm까지 역순으로 정렬되어있고, i는 역순으로 정렬되어있지 않은 첫 경계일 때
+     * j1 ... jm까지 오름차순으로 다시 정렬 수, j 안에 i 다음으로 큰 첫번째 수와 i를 교환하는것
+     */
     fun nextPermutation(nums: IntArray): Unit {
         var decreaseBegin = nums.size - 1
         while (decreaseBegin > 0) {
-            if (nums[decreaseBegin-1] >= nums[decreaseBegin]) {
+            if (nums[decreaseBegin - 1] >= nums[decreaseBegin]) {
                 decreaseBegin--
             } else {
                 break
@@ -14,9 +20,9 @@ class Solution {
             return
         }
 
-        val changeIdx = bisectRight(nums, nums[decreaseBegin-1], decreaseBegin, nums.size - 1)
-        (nums[decreaseBegin-1] to nums[changeIdx]).let {
-            nums[decreaseBegin-1] = it.second
+        val changeIdx = bisectRight(nums, nums[decreaseBegin - 1], decreaseBegin, nums.size - 1)
+        (nums[decreaseBegin - 1] to nums[changeIdx]).let {
+            nums[decreaseBegin - 1] = it.second
             nums[changeIdx] = it.first
         }
     }
@@ -32,8 +38,8 @@ class Solution {
             arr[mid] = it.first
         }
 
-        var pivot = arr[hi]
-        var i = lo-1
+        val pivot = arr[hi]
+        var i = lo - 1
         for (j in lo..<hi) {
             if (pivot > arr[j]) {
                 i++
@@ -49,8 +55,8 @@ class Solution {
             arr[i] = it.second
             arr[hi] = it.first
         }
-        sortInplace(arr, lo, i-1)
-        sortInplace(arr, i+1, hi)
+        sortInplace(arr, lo, i - 1)
+        sortInplace(arr, i + 1, hi)
     }
 
     fun bisectRight(arr: IntArray, x: Int, lo: Int, hi: Int): Int {
@@ -60,9 +66,9 @@ class Solution {
 
         val mid = (lo + hi) / 2
         if (arr[mid] <= x) {
-            return bisectRight(arr, x, mid+1, hi)
+            return bisectRight(arr, x, mid + 1, hi)
         } else /*(arr[mid] > x)*/ {
-            return bisectRight(arr, x, lo, mid-1)
+            return bisectRight(arr, x, lo, mid - 1)
         }
     }
 }
