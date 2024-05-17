@@ -1,7 +1,7 @@
 class Solution {
     fun merge(intervals: Array<IntArray>): Array<IntArray> {
         val ans = mutableListOf<IntArray>()
-        intervals.sortWith(compareBy({it[0]}, {it[1]}))
+        intervals.sortBy{ it[0] }
 
         intervals.forEach {
             val (_, topE) = ans.lastOrNull() ?: let { _ ->
