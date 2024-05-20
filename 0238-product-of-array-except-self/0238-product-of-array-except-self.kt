@@ -1,23 +1,22 @@
 class Solution {
     fun productExceptSelf(nums: IntArray): IntArray {
-        var zeroCnt = 0
-        var mult = 1
-        nums.forEach {
-            when (it) {
-                0 -> zeroCnt++
-                else -> mult *= it
-            }
+        val n = nums.size
+        val backward = nums.clone()
+
+        (1 until n).forEach {
+            nums[it] *= nums[it-1]
         }
 
-        return nums.map {
-            when (zeroCnt) {
-                0 -> mult / it
-                1 -> when (it) {
-                    0 -> mult
-                    else -> 0
-                }
-                else -> 0
-            }
-        }.toIntArray()
+        (n-2 downTo 0).forEach {
+            backward[it] *= backward[it+1]
+        }
+
+        backward[0] = backward[1]
+        (1 .. n-2).forEach {
+            backward[it] = backward[it+1] * nums[it-1]
+        }
+        backward[n-1] = nums[n-2]
+
+        return backward
     }
 }
