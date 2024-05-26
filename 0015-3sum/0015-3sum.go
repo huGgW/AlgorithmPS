@@ -3,31 +3,33 @@ import (
 )
 
 func threeSum(nums []int) [][]int {
-    slices.Sort(nums)
+	slices.Sort(nums)
+	answer := [][]int{}
 
-    zeroSet := map[[3]int]struct{}{}
+	for i := 0; i < len(nums)-2; {
+		fst := nums[i]
+		b, e := i+1, len(nums)-1
+		for b < e {
+            scd, thd := nums[b], nums[e]
+			sum := fst + scd + thd
+			if sum > 0 {
+				e--
+			} else if sum < 0 {
+				b++
+			} else {
+				answer = append(answer, []int{fst, scd, thd})
 
-    for i := 0; i < len(nums)-2; i++ {
-        b, e := i+1, len(nums)-1
-        for b < e {
-            sum := nums[i] + nums[b] + nums[e]
-            if sum > 0 {
-                e--
-            } else if sum < 0 {
-                b++
-            } else {
-                zeroSet[[3]int{nums[i], nums[b], nums[e]}] = struct{}{}
-                b++
-                e--
-            }
-        }
-    }
+				for ; b < e && nums[b] == scd; b++ {
+				}
 
+				for ; b < e && nums[e] == thd; e-- {
+				}
+			}
+		}
 
-    answer := [][]int{}
-    for arr, _ := range zeroSet {
-        answer = append(answer, arr[:])
-    }
+		for ; i < len(nums)-2 && nums[i] == fst; i++ {
+		}
+	}
 
-    return answer
+	return answer
 }
