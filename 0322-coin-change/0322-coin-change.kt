@@ -1,49 +1,25 @@
-data class State (
-    val nextIndex: Int,
-    val amount: Int,
-)
-
 class Solution {
     fun coinChange(coins: IntArray, amount: Int): Int {
         coins.sortDescending()
-        return lookUp(coins, State(0, amount), mutableMapOf())
+        return lookUp(coins, amount, mutableMapOf()) ?: -1
     }
 
-    fun lookUp(coins: IntArray, state: State, history: MutableMap<State, Int>): Int
-    = history[state] ?: let {
-        when (state.nextIndex) {
-            coins.size - 1 -> {
-                val cnt = if (state.amount % coins.last() == 0) {
-                        state.amount / coins.last()
-                    } else {
-                        -1
-                    }
-
-                cnt.also {
-                        history[state] = it
-                    }
-            }
+    fun lookUp(coins: IntArray, amount: Int, history: MutableMap<Int, Int?>): Int? = if (amount in history) {
+        history[amount]
+    } else {
+        when {
+            amount < 0 -> null
+            amount == 0 -> 0
             else -> {
-                val coin = coins[state.nextIndex]
-                var leftAmount = state.amount % coin
-                var thisCnt = state.amount / coin
-                var minTotalCnt: Int = -1
-
-                while (thisCnt >= 0) {
-                    val cnt = lookUp(coins, State(state.nextIndex + 1, leftAmount), history)
-                    if (cnt != -1) {
-                        if (minTotalCnt == -1 || minTotalCnt > cnt + thisCnt) {
-                            minTotalCnt = cnt + thisCnt
-                        }
-                    }
-                    thisCnt--
-                    leftAmount += coin
-                }
-
-                minTotalCnt.also {
-                    history[state] = it
-                }
-
+                val minCnt = coins.map {
+                    lookUp(coins, amount - it, history)
+                }.filterNotNull()
+                    .minOrNull()
+                minCnt ?. let { it + 1 }
+            }
+        }.also {
+            if (amount > 0) {
+                history[amount] = it
             }
         }
     }
