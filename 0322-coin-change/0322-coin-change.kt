@@ -1,6 +1,5 @@
 class Solution {
     fun coinChange(coins: IntArray, amount: Int): Int {
-        coins.sortDescending()
         return lookUp(coins, amount, mutableMapOf()) ?: -1
     }
 
