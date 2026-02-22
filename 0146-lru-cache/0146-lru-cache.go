@@ -1,108 +1,123 @@
-
 type LRUCache struct {
-    capacity int
-    valueMap map[int]int
-    nodeMap map[int]*node
-    list doubleLinkedList
+	linkedList *LinkedList
+	nodeMap    map[int]*Node
+	capacity   int
 }
 
 func Constructor(capacity int) LRUCache {
-    return LRUCache {
-        capacity: capacity,
-        valueMap: map[int]int{},
-        nodeMap: map[int]*node{},
-        list: doubleLinkedList{},
-    }
+	return LRUCache{
+		linkedList: new(LinkedList),
+		nodeMap:    make(map[int]*Node, capacity),
+		capacity:   capacity,
+	}
 }
 
 func (this *LRUCache) Get(key int) int {
-    if nptr, ok := this.nodeMap[key]; ok {
-        value := this.valueMap[key]
+	n, ok := this.nodeMap[key]
+	if !ok {
+		return -1
+	}
 
-        this.list.removeNode(nptr)
-        this.list.pushHead(nptr)
+	this.linkedList.Remove(n)
+	this.linkedList.Insert(n)
 
-        return value
-    } else {
-        return -1
-    }
+	return n.Value
 }
 
-func (this *LRUCache) Put(key int, value int)  {
-    // edit value
-    this.valueMap[key] = value
+func (this *LRUCache) Put(key int, value int) {
+	if n, exists := this.nodeMap[key]; exists {
+		n.Value = value
 
-    // edit node
-    if nptr, ok := this.nodeMap[key]; ok {
-        this.list.removeNode(nptr)
-        this.list.pushHead(nptr)
-    } else {
-        nd := newNode(key)
-        this.nodeMap[key] = &nd
-        this.list.pushHead(&nd)
-    }
+		this.linkedList.Remove(n)
+		this.linkedList.Insert(n)
 
-    // remove overflowed node
-    if len(this.valueMap) > this.capacity {
-        nptr := this.list.popTail()
-        delete(this.valueMap, nptr.key)
-        delete(this.nodeMap, nptr.key)
-    }
+		return
+	}
+
+	n := &Node{Key: key, Value: value}
+	this.nodeMap[key] = n
+    this.linkedList.Insert(n)
+
+	if len(this.nodeMap) > this.capacity {
+		removeNode := this.linkedList.Head
+
+		this.linkedList.Remove(removeNode)
+		delete(this.nodeMap, removeNode.Key)
+	}
 }
 
-
-type doubleLinkedList struct {
-    head *node
-    tail *node
-}
-func (dl *doubleLinkedList) removeNode(nptr *node) {
-    if dl.head == nil && dl.tail == nil {
-        panic("Pop from empty list")
-    }
-
-    if nptr.before != nil {
-        nptr.before.after = nptr.after
-    }
-    if nptr.after != nil {
-        nptr.after.before = nptr.before
-    }
-
-    if nptr == dl.head {
-        dl.head = nptr.after
-    }
-    if nptr == dl.tail {
-        dl.tail = nptr.before
-    }
-
-    nptr.before = nil
-    nptr.after = nil
-}
-func (dl *doubleLinkedList) popTail() *node {
-    tailPtr := dl.tail
-    dl.removeNode(tailPtr)
-    return tailPtr
-}
-func (dl *doubleLinkedList) pushHead(nptr *node) {
-    if dl.head == nil && dl.tail == nil {
-        dl.head = nptr
-        dl.tail = nptr
-    } else {
-        dl.head.before = nptr
-        nptr.after = dl.head
-        dl.head = nptr
-    }
+type LinkedList struct {
+	Head *Node
+	Tail *Node
 }
 
+func (l *LinkedList) Insert(n *Node) {
+	if n == nil || n.prev != nil || n.next != nil || l.Head == n || l.Tail == n {
+		panic("should new node")
+	}
 
-type node struct {
-    key int
-    before *node
-    after *node
-}
-func newNode(k int) node {
-    return node{ key: k }
+	if l.IsEmpty() {
+		l.Head = n
+		l.Tail = n
+	} else {
+		pp := l.Tail
+		pp.next = n
+		n.prev = pp
+		l.Tail = n
+	}
 }
 
+func (l *LinkedList) Remove(n *Node) {
+	if l.IsEmpty() {
+        panic("empty remove")
+	}
+
+	if n == nil {
+        panic("nil remove")
+	}
+
+	np := n.prev
+	nn := n.next
+
+	switch {
+	case np == nil && nn == nil:
+		if n != l.Head || n != l.Tail {
+			panic("wrong node") // wrong node input
+		}
+		l.Head = nil
+		l.Tail = nil
+	case np == nil:
+		if n != l.Head {
+			panic("wrong node") // wrong node input
+		}
+		nn.prev = nil
+		n.next = nil
+		l.Head = nn
+	case nn == nil:
+		if n != l.Tail {
+			panic("wrong node") // wrong node input
+		}
+		np.next = nil
+		n.prev = nil
+		l.Tail = np
+	default: // since time complexity, do not check node validity
+		np.next = nn
+		nn.prev = np
+		n.prev = nil
+		n.next = nil
+	}
+}
+
+func (l *LinkedList) IsEmpty() bool {
+	return l.Head == nil && l.Tail == nil
+}
+
+type Node struct {
+	prev  *Node
+	next  *Node
+	Key   int
+	Value int
+}
 
 /**
  * Your LRUCache object will be instantiated and called as such:
